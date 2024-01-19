@@ -160,6 +160,17 @@ Request Body:
 * Connection #0 to host localhost left intact
 ```
 </details>
+
+<details>
+<summary>kubectl get pods</summary>
+
+```shell
+zag1988@k8s-test:~/main$ kubectl get pods -o wide
+NAME           READY   STATUS    RESTARTS   AGE   IP             NODE       NOMINATED NODE   READINESS GATES
+hello-world    1/1     Running   0          71m   10.1.137.136   k8s-test   <none>           <none>
+netology-web   1/1     Running   0          25m   10.1.137.139   k8s-test   <none>           <none>
+```
+</details>
 ------
 
 ### Правила приёма работы
