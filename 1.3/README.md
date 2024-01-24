@@ -26,7 +26,7 @@
 
 1. Создать Deployment приложения, состоящего из двух контейнеров — nginx и multitool. Решить возникшую ошибку.
 
-[Title](main/deployment1.yaml)
+[Deployment.yaml](main/deployment1.yaml)
 
 2. После запуска увеличить количество реплик работающего приложения до 2.
 3. Продемонстрировать количество подов до и после масштабирования.
@@ -43,7 +43,7 @@ netology1-bb7bfb8f4-cbdn6   2/2     Running   0          4s
 ```
 4. Создать Service, который обеспечит доступ до реплик приложений из п.1.
 
-[Title](main/service.yaml)
+[Service.yaml](main/service.yaml)
 
 ```shell
 
@@ -127,7 +127,7 @@ Commercial support is available at
 
 1. Создать Deployment приложения nginx и обеспечить старт контейнера только после того, как будет запущен сервис этого приложения.
 
-[Title](main/deployment_init.yaml)
+[Deployment_init.yaml](main/deployment_init.yaml)
 
 2. Убедиться, что nginx не стартует. В качестве Init-контейнера взять busybox.
 
