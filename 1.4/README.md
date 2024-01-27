@@ -128,6 +128,10 @@ WBITT Network MultiTool (with NGINX) - deployment-6f8868855d-hjmx8 - 10.1.137.13
 ### Задание 2. Создать Service и обеспечить доступ к приложениям снаружи кластера
 
 1. Создать отдельный Service приложения из Задания 1 с возможностью доступа снаружи кластера к nginx, используя тип NodePort.
+
+
+[SVC for NODEport.yaml](main/svc_for_nodPort.yaml)
+
 2. Продемонстрировать доступ с помощью браузера или `curl` с локального компьютера.
 
 
@@ -214,10 +218,6 @@ WBITT Network MultiTool (with NGINX) - deployment-6f8868855d-zv7tg - 10.1.137.19
 ![SVC NodePORT.PNG](<main/IMG/SVC NodePORT.PNG>)
 
 </details>
-
-
-
-[SVC for NODEport.yaml](main/svc_for_nodPort.yaml)
 
 ------
 
