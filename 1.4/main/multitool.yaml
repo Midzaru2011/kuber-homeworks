@@ -18,7 +18,3 @@ spec:
       containers:
         - image: dergeberl/multitool:latest
           name: multitool
-          resources:
-            requests:
-              cpu: 100m
-              memory: 256Mi
