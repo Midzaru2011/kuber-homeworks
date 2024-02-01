@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemoset
+  labels:
+    app: node-daemoset
+spec:
+  selector:
+    matchLabels:
+      app: node-daemoset
+  template:
+    metadata:
+      labels:
+        app: node-daemoset
+    spec:
+      containers:
+      - name: network-multitool
+        image: wbitt/network-multitool
+        volumeMounts:
+        - name: k8s
+          mountPath: /var/log/syslog
+      volumes:
+      - name: k8s
+        hostPath:
+          path: /var/log/syslog

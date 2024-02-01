@@ -62,8 +62,22 @@ Netology!
 Создать DaemonSet приложения, которое может прочитать логи ноды.
 
 1. Создать DaemonSet приложения, состоящего из multitool.
+
+**[Daemonset](main/daemonset.yaml)**
+
 2. Обеспечить возможность чтения файла `/var/log/syslog` кластера MicroK8S.
+
+```shell
+      volumes:
+      - name: k8s
+        hostPath:
+          path: /var/log/syslog
+```
+
 3. Продемонстрировать возможность чтения файла изнутри пода.
+
+![Syslog](<IMG/syslog from daemonset.PNG>)
+
 4. Предоставить манифесты Deployment, а также скриншоты или вывод команды из п. 2.
 
 ------
