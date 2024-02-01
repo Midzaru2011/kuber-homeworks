@@ -65,6 +65,15 @@ Netology!
 
 **[Daemonset](main/daemonset.yaml)**
 
+```shell
+zag1988@k8s-test:~/main/2.1$ kubectl get pods
+NAME                                 READY   STATUS    RESTARTS   AGE
+volume-deployment-7fd7d746df-wv24p   2/2     Running   0          54m
+volume-deployment-7fd7d746df-h4j8l   2/2     Running   0          54m
+daemoset-zrsz8                       1/1     Running   0          4m52s
+```
+
+
 2. Обеспечить возможность чтения файла `/var/log/syslog` кластера MicroK8S.
 
 ```shell
