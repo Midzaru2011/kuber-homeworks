@@ -29,10 +29,29 @@
 Создать Deployment приложения, состоящего из двух контейнеров и обменивающихся данными.
 
 1. Создать Deployment приложения, состоящего из контейнеров busybox и multitool.
+
+**[Deployment](main/volume-deployment.yaml)**
+
 2. Сделать так, чтобы busybox писал каждые пять секунд в некий файл в общей директории.
 3. Обеспечить возможность чтения файла контейнером multitool.
 4. Продемонстрировать, что multitool может читать файл, который периодоически обновляется.
+
+```shell
+zag1988@k8s-test:~/main/2.1$ kubectl get pods
+NAME                                 READY   STATUS    RESTARTS   AGE
+volume-deployment-7fd7d746df-wv24p   2/2     Running   0          8m43s
+volume-deployment-7fd7d746df-h4j8l   2/2     Running   0          8m40s
+
+zag1988@k8s-test:~/main/2.1$ microk8s kubectl exec volume-deployment-7fd7d746df-wv24p -c multitool  -- tail -n 5 /sasha/logoutput.txt
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+
+```
 5. Предоставить манифесты Deployment в решении, а также скриншоты или вывод команды из п. 4.
+![Tail](IMG/volume.PNG)
 
 ------
 
