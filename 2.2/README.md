@@ -30,10 +30,91 @@
 Создать Deployment приложения, использующего локальный PV, созданный вручную.
 
 1. Создать Deployment приложения, состоящего из контейнеров busybox и multitool.
+
+[Deployment](main/volume-deployment.yaml)
+
 2. Создать PV и PVC для подключения папки на локальной ноде, которая будет использована в поде.
+
+[PV.yaml](main/pv.yaml)  
+![PV](IMG/PV.PNG)
+
+
+[PVC.yaml](main/pvc.yaml)
+![PVC](IMG/PVC.PNG)
+
+
 3. Продемонстрировать, что multitool может читать файл, в который busybox пишет каждые пять секунд в общей директории. 
+
+```shell
+zag1988@k8s-test:~/main/2.2$ kubectl exec volume-deployment-646f458c87-spgvr -c multitool  -- tail -n 10 /sasha/logoutput.txt
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+```
+
 4. Удалить Deployment и PVC. Продемонстрировать, что после этого произошло с PV. Пояснить, почему.
+
+```shell
+zag1988@k8s-test:~/main/2.2$ kubectl get deployments
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+volume-deployment   2/2     2            2           55m
+zag1988@k8s-test:~/main/2.2$ kubectl delete deployments volume-deployment 
+deployment.apps "volume-deployment" deleted
+zag1988@k8s-test:~/main/2.2$ kubectl get pvc
+NAME   STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+pvc    Bound    pv       5Gi        RWO                           59m
+zag1988@k8s-test:~/main/2.2$ kubectl delete pvc pvc 
+persistentvolumeclaim "pvc" deleted
+zag1988@k8s-test:~/main/2.2$ kubectl delete pv
+error: resource(s) were provided, but no name was specified
+zag1988@k8s-test:~/main/2.2$ kubectl get pv
+NAME   CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM         STORAGECLASS   REASON   AGE
+pv     5Gi        RWO            Delete           Failed   default/pvc                           47m
+zag1988@k8s-test:~/main/2.2$ cd /sasha/
+zag1988@k8s-test:/sasha$ ls -l
+total 4
+drwxr-xr-x 2 root root 4096 Feb  3 08:55 pv
+zag1988@k8s-test:/sasha$ cd pv/
+zag1988@k8s-test:/sasha/pv$ ls -l
+total 12
+-rw-r--r-- 1 root root 11000 Feb  3 09:41 logoutput.txt
+zag1988@k8s-test:/sasha/pv$ tail -10 logoutput.txt 
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+Netology!
+```
+Файл logoutput.txt сохранен локально на ноде кластера k8s. 
+
+
 5. Продемонстрировать, что файл сохранился на локальном диске ноды. Удалить PV.  Продемонстрировать что произошло с файлом после удаления PV. Пояснить, почему.
+
+```shell
+zag1988@k8s-test:/sasha/pv$ ls -l
+total 12
+-rw-r--r-- 1 root root 11000 Feb  3 09:41 logoutput.txt
+
+zag1988@k8s-test:/sasha/pv$ kubectl get pv
+No resources found
+zag1988@k8s-test:/sasha/pv$ ls -l
+total 12
+-rw-r--r-- 1 root root 11000 Feb  3 09:41 logoutput.txt
+```
+При монтировании Persistent Volume в директорию Kubernetes, содержимое директории не перезаписывается данными с Persistent Volume, а вместо этого создается ссылка на эти данные. Таким образом, при удалении Persistent Volume директория продолжает ссылаться на существующие данные на удаленном хранилище.
+
 5. Предоставить манифесты, а также скриншоты или вывод необходимых команд.
 
 ------
