@@ -31,15 +31,15 @@
 
 1. Создать Deployment приложения, состоящего из контейнеров busybox и multitool.
 
-[Deployment](main/volume-deployment.yaml)
+**[Deployment](main/volume-deployment.yaml)**
 
 2. Создать PV и PVC для подключения папки на локальной ноде, которая будет использована в поде.
 
-[PV.yaml](main/pv.yaml)  
+**[PV.yaml](main/pv.yaml)**
 ![PV](IMG/PV.PNG)
 
 
-[PVC.yaml](main/pvc.yaml)
+**[PVC.yaml](main/pvc.yaml)**
 ![PVC](IMG/PVC.PNG)
 
 
