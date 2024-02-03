@@ -1,0 +1,64 @@
+sudo apt-get install nfs-kernel-server
+
+Создайте каталог, который будет использоваться для NFS:
+
+sudo mkdir -p /srv/nfs
+sudo chown nobody:nogroup /srv/nfs
+sudo chmod 0777 /srv/nfs
+
+Отредактируйте /etc/exports файл. Убедитесь, что IP-адреса всех ваших узлов MicroK8s позволяют подключать этот общий ресурс. Например, разрешить подключение всех IP-адресов в 10.0.0.0/24 подсети.:
+
+sudo mv /etc/exports /etc/exports.bak
+echo '/srv/nfs 10.0.0.0/24(rw,sync,no_subtree_check)' | sudo tee /etc/exports
+Наконец, перезапустите сервер NFS:
+
+sudo systemctl restart nfs-kernel-server
+
+Установите драйвер CSI для NFS
+Мы будем использовать вышестоящий драйвер NFS CSI. Сначала мы развернем NFS provisioner, используя официальную схему управления.
+
+Включите дополнение Helm3 (если оно еще не включено) и добавьте репозиторий для драйвера NFS CSI:
+
+microk8s enable helm3
+microk8s helm3 repo add csi-driver-nfs https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+microk8s helm3 repo update
+
+Затем установите Helm chart в kube-system пространстве имен с:
+
+microk8s helm3 install csi-driver-nfs csi-driver-nfs/csi-driver-nfs \
+    --namespace kube-system \
+    --set kubeletDir=/var/snap/microk8s/common/var/lib/kubelet
+
+
+После развертывания Helm-диаграммы дождитесь, пока появятся контроллер CSI и модули узлов, используя следующую kubectl команду …
+
+microk8s kubectl wait pod --selector app.kubernetes.io/name=csi-driver-nfs --for condition=ready --namespace kube-system
+
+... который в случае успеха выдаст результат, аналогичный:
+
+pod/csi-nfs-controller-67bd588cc6-7vvn7 condition met
+pod/csi-nfs-node-qw8rg condition met
+
+На этом этапе вы также должны иметь возможность составить список доступных драйверов CSI в вашем кластере Kubernetes …
+
+microk8s kubectl get csidrivers
+
+
+Создайте класс StorageClass для NFS
+Далее нам нужно будет создать класс хранилища Kubernetes, который использует nfs.csi.k8s.io драйвер CSI. Предполагая, что вы настроили общий ресурс NFS /srv/nfs и адрес вашего сервера NFS является 10.0.0.42, создайте следующий файл:
+
+# sc-nfs.yaml
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-csi
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 10.0.0.42
+  share: /srv/nfs
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+mountOptions:
+  - hard
+  - nfsvers=4.1

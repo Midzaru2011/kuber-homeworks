@@ -126,8 +126,98 @@ total 12
 Создать Deployment приложения, которое может хранить файлы на NFS с динамическим созданием PV.
 
 1. Включить и настроить NFS-сервер на MicroK8S.
+
+**[Настройка NFS](<main/Настройка NFS.txt>)**
+
 2. Создать Deployment приложения состоящего из multitool, и подключить к нему PV, созданный автоматически на сервере NFS.
+
+**[NFS Deployment](main/volume-deployment.yaml)**
+
+**[Storage Classes](main/storage.yaml)**
+
+<details>
+<summary>mounts</summary>
+
+```shell
+zag1988@k8s-test:~/main/2.2$ kubectl describe pods volume-deployment-867c76fcc9-fvwfl
+Name:             volume-deployment-867c76fcc9-fvwfl
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             k8s-test/10.128.0.5
+Start Time:       Sat, 03 Feb 2024 11:52:12 +0000
+Labels:           app=main
+                  pod-template-hash=867c76fcc9
+Annotations:      cni.projectcalico.org/containerID: 38a20f8bc0fcbd1989fe33e2f97b4f0a607a0ab3466d98d12bf02597c2ec3ee8
+                  cni.projectcalico.org/podIP: 10.1.137.146/32
+                  cni.projectcalico.org/podIPs: 10.1.137.146/32
+Status:           Running
+IP:               10.1.137.146
+IPs:
+  IP:           10.1.137.146
+Controlled By:  ReplicaSet/volume-deployment-867c76fcc9
+Containers:
+  busybox:
+    Container ID:  containerd://a138803ae7ded93f3fce5089a84b83da49981efd8c6f27bb782ac10dee2fcccd
+    Image:         busybox:latest
+    Image ID:      docker.io/library/busybox@sha256:6d9ac9237a84afe1516540f40a0fafdc86859b2141954b4d643af7066d598b74
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      while true; do echo Netology! >> /sasha/logoutput.txt; sleep 5; done
+    State:          Running
+      Started:      Sat, 03 Feb 2024 11:52:15 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /sasha from varlog (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-df44j (ro)
+  multitool:
+    Container ID:   containerd://4bda065e10efee046af3be6260a53b13922739ab0c5e39c8499fb37bb23d7a2d
+    Image:          wbitt/network-multitool
+    Image ID:       docker.io/wbitt/network-multitool@sha256:d1137e87af76ee15cd0b3d4c7e2fcd111ffbd510ccd0af076fc98dddfc50a735
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Sat, 03 Feb 2024 11:52:17 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /sasha from varlog (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-df44j (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  varlog:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  pvc-nfs
+    ReadOnly:   false
+  kube-api-access-df44j:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>
+```
+</details>
+
 3. Продемонстрировать возможность чтения и записи файла изнутри пода. 
+
+![Cat logoutput.txt from multitool](IMG/NFS.PNG)
+
 4. Предоставить манифесты, а также скриншоты или вывод необходимых команд.
 
 ------
