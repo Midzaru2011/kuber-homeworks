@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: volume-deployment
+  labels:
+    app: main1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: main1
+  template:
+    metadata:
+      labels:
+        app: main1
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/
+          name: volume
+      volumes:
+      - name: volume
+        configMap:
+          name: index

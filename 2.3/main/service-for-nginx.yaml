@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myservice
+spec:
+  selector:
+    app: main1
+  type: NodePort
+  ports:
+    - name: web
+      port: 80
+      nodePort: 31280
+      targetPort: 80
