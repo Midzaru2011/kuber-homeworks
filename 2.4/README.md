@@ -89,6 +89,16 @@ users:
 
 3. Создайте роли и все необходимые настройки для пользователя.
 
+Перед тем как создавать роли, надо в кластере включить RBAC:
+
+```shell
+zag1988@k8s-test:~/.kube$ microk8s enable rbac
+Infer repository core for addon rbac
+Enabling RBAC
+Reconfiguring apiserver
+Restarting apiserver
+RBAC is enabled
+```
 ```shell
 zag1988@k8s-test:~/main/2.4$ kubectl apply -f role.yaml 
 role.rbac.authorization.k8s.io/pod-desc-logs created
@@ -181,7 +191,22 @@ Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists fo
 Events:                      <none>
 
 ```
+Удалять поды при этом пользователь 'sasha' не может :
 
+```shell
+kubectl delete pods deployment-6f8868855d-2w8mt
+Error from server (Forbidden): pods "deployment-6f8868855d-2w8mt" is forbidden: User "sasha" cannot delete resource "pods" in API group "" in the namespace "default"
+
+zag1988@k8s-test:~/main/2.4$ kubectl auth can-i list pods 
+yes
+zag1988@k8s-test:~/main/2.4$ kubectl auth can-i get pods
+yes
+zag1988@k8s-test:~/main/2.4$ kubectl auth can-i watch pods
+yes
+zag1988@k8s-test:~/main/2.4$ kubectl auth can-i delete pods
+no
+
+```
 
 5. Предоставьте манифесты и скриншоты и/или вывод необходимых команд.
 
