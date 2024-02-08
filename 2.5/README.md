@@ -221,12 +221,6 @@ demo-bfb65f8fb-2qpnv   1/1     Running   0          3m34s
 
 2. Одну версию в namespace=app1, вторую версию в том же неймспейсе, третью версию в namespace=app2.
 
-Перед выполнением задания, удалю шаблон demo1
-
-```shell
-zag1988@k8s-test:~/main/2.5/charts$ helm uninstall demo1
-release "demo1" uninstalled
-```
 Создадим в namespace app1 две версии приложения demo2:
 
 ```shell
