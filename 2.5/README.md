@@ -117,7 +117,7 @@ metadata:
   labels:
     app: demo
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: demo
