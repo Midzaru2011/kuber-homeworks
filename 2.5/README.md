@@ -25,7 +25,7 @@
 
 1. Необходимо упаковать приложение в чарт для деплоя в разные окружения. 
 
-    Скачал шаблон для чарта:
+Скачал шаблон для чарта:
 ```shell
     zag1988@k8s-test:~/main/2.5/charts$ ls -l 01-simple/
     total 28
@@ -90,10 +90,10 @@ spec:
               memory: 128Mi
 ```
 
-Версия приложения не установлена. Передадим версию приложения через переменную **[Value](chart/01-simple/new-values.yaml)** 
+Версия приложения не установлена. Передадим версию приложения через переменную **[Value](chart/01-simple/values.yaml)** 
 
 ```shell
-zag1988@k8s-test:~/main/2.5/charts$  helm template -f 01-simple/new-values.yaml 01-simple
+zag1988@k8s-test:~/main/2.5/charts$  helm template -f 01-simple/values.yaml 01-simple
 ---
 # Source: hard/templates/service.yaml
 apiVersion: v1
@@ -146,7 +146,7 @@ spec:
 В итоге, c помощью шаблона, задеплоили объекты 'pod' и 'service', с версией nginx 1.19.1:
 
 ```shell
-zag1988@k8s-test:~/main/2.5/charts$ helm install demo1 --set replicaCount=3 01-simple/ --values 01-simple/new-values.yaml 
+zag1988@k8s-test:~/main/2.5/charts$ helm install demo1 --set replicaCount=3 01-simple/ --values 01-simple/values.yaml 
 NAME: demo1
 LAST DEPLOYED: Fri Feb  9 11:41:13 2024
 NAMESPACE: default
